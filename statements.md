@@ -84,5 +84,46 @@ VALUES (4, 'Taylor Swift', 26);
 SELECT * FROM celebs
 ```
 
-Select
+## Select
+
 SELECT statements are used to fetch data from a database. In the statement below, SELECT returns all data in the name column of the celebs table.
+
+```sql
+SELECT name FROM celebs;
+```
+
+1. SELECT is a clause that indicates that the statement is a query. You will use SELECT every time you query data from a database.
+
+2. name specifies the column to query data from.
+
+3. FROM celebs specifies the name of the table to query data from. In this statement, data is queried from the celebs table.
+
+You can also query data from all columns in a table with SELECT.
+
+```sql
+SELECT * FROM celebs;
+```
+
+- is a special wildcard character that we have been using. It allows you to select every column in a table without having to name each one individually. Here, the result set contains every column in the celebs table.
+
+SELECT statements always return a new table called the result set.
+
+## Alter
+
+The ALTER TABLE statement adds a new column to a table. You can use this command when you want to add columns to a table. The statement below adds a new column twitter_handle to the celebs table.
+
+```sql
+ALTER TABLE celebs
+ADD COLUMN twitter_handle TEXT;
+```
+
+1. ALTER TABLE is a clause that lets you make the specified changes.
+
+2. celebs is the name of the table that is being changed.
+
+3. ADD COLUMN is a clause that lets you add a new column to a table:
+
+twitter_handle is the name of the new column being added
+TEXT is the data type for the new column
+
+4. NULL is a special value in SQL that represents missing or unknown data. Here, the rows that existed before the column was added have NULL (∅) values for twitter_handle.
