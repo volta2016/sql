@@ -160,3 +160,160 @@ SELECT * FROM movies WHERE title lIKE = "%WALL_%";
 
 9 WALL-E Andrew Stanton 2008 104
 87 WALL-G Brenda Chapman 2042 97
+
+## Filtering and sorting Query results
+
+Even though the data in a database may be unique, the results of any particular query may not be – take our Movies table for example, many different movies can be released the same year. In such cases, SQL provides a convenient way to discard rows that have a duplicate column value by using the DISTINCT keyword.
+
+```sql
+Select query with unique results
+SELECT DISTINCT column, another_column, …
+FROM mytable
+WHERE condition(s);
+```
+
+Since the DISTINCT(distincion) keyword will blindly remove duplicate rows, we will learn in a future lesson how to discard duplicates based on specific columns using grouping and the GROUP BY clause.
+
+Ordering results
+
+Unlike our neatly ordered table in the last few lessons, most data in real databases are added in no particular column order. As a result, it can be difficult to read through and understand the results of a query as the size of a table increases to thousands or even millions rows.
+
+To help with this, SQL provides a way to sort your results by a given column in ascending or descending order using the ORDER BY clause.
+
+```sql
+Select query with ordered results
+SELECT column, another_column, …
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC;
+```
+
+When an ORDER BY clause is specified, each row is sorted alpha-numerically based on the specified column's value. In some databases, you can also specify a collation to better sort data containing international text.
+
+Limiting results to a subset
+Another clause which is commonly used with the ORDER BY clause are the LIMIT and OFFSET clauses, which are a useful optimization to indicate to the database the subset of the results you care about.
+The LIMIT will reduce the number of rows to return, and the optional OFFSET will specify where to begin counting the number rows from.
+
+```sql
+Select query with limited rows
+SELECT column, another_column, …
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+If you think about websites like Reddit or Pinterest, the front page is a list of links sorted by popularity and time, and each subsequent page can be represented by sets of links at different offsets in the database. Using these clauses, the database can then execute queries faster and more efficiently by processing and returning only the requested content.
+
+Did you know?
+If you are curious about when the LIMIT and OFFSET are applied relative to the other parts of a query, they are generally done last after the other clauses have been applied. We'll touch more on this in Lesson 12: Order of execution after introducting a few more parts of the query.
+
+ORDER BY -> Order alphabetically
+DISTINCT -> I want the directo without duplicate
+
+1. List all directors of Pixar movies (alphabetically), without duplicates ✓
+
+```sql
+SELECT DISTINCT director FROM movies ORDER BY director;
+```
+
+2. List the last four Pixar movies released (ordered from most recent to least)
+
+```sql
+SELECT * FROM movies ORDER BY year DESC LIMIT 4;
+```
+
+3. List the first five Pixar movies sorted alphabetically
+
+```sql
+SELECT * FROM movies ORDER BY title ASC LIMIT 5;
+```
+
+List the next five Pixar movies sorted alphabetically
+
+```sql
+SELECT * FROM movies ORDER BY title ASC LIMIT 5 OFFSET 5;
+```
+
+## Simple SELECT Queries
+
+You've done a good job getting to this point! Now that you've gotten a taste of how to write a basic query, you need to practice writing queries that solve actual problems.
+
+```sql
+SELECT query
+SELECT column, another_column, …
+FROM mytable
+WHERE condition(s)
+ORDER BY column ASC/DESC
+LIMIT num_limit OFFSET num_offset;
+```
+
+Exercise
+
+In the exercise below, you will be working with a different table. This table instead contains information about a few of the most populous cities of North America[1] including their population and geo-spatial location in the world.
+
+## Did you know?
+
+Positive latitudes correspond to the northern hemisphere, and positive longitudes correspond to the eastern hemisphere. Since North America is north of the equator and west of the prime meridian, all of the cities in the list have positive latitudes and negative longitudes.
+
+Try and write some queries to find the information requested in the tasks you know. You may have to use a different combination of clauses in your query for each task. Once you're done, continue onto the next lesson to learn about queries that span multiple tables.
+
+1. List all the Canadian cities and their populations
+
+```sql
+SELECT * FROM north_american_cities WHERE Country = "Canada";
+```
+
+2. Order all the cities in the United States by their latitude from north to south
+
+```sql
+SELECT * FROM north_american_cities
+WHERE longitude < 87.68
+ORDER BY longitude ASC;
+```
+
+3. List all the cities west of Chicago, ordered from west to east
+
+```sql
+SELECT * FROM north_american_cities
+WHERE longitude < -87.629798
+ORDER BY longitude ASC;
+```
+
+4. List the two largest cities in Mexico (by population)
+
+```sql
+SELECT * FROM north_american_cities
+WHERE country = "Mexico"
+ORDER BY population DESC
+LIMIT 2;
+```
+
+5 List the third and fourth largest cities (by population) in the United States and their population
+
+```sql
+SELECT * FROM north_american_cities
+WHERE country = "United States"
+ORDER BY population DESC
+LIMIT 2
+OFFSET 2;
+```
+
+## Multi-table queries with JOINs
+
+When we realize the relation between two tables, we want to retrieve data from a table and be able to take it to another
+
+We want to make the realtion, we have the user table and the tweets table, we want to bring us the information to be able to make an introinspetion of the data and to be able to make a match, than to have the data of all these tables and not to have them separated.
+There are different types of joins:
+
+**INNER JOIN:** This type of join returns only records that have matches in both tables based on the specified condition. Records that do not meet the condition will not be included in the result.
+
+**LEFT JOIN (LEFT OUTER JOIN):** A left join returns all records from the left table (the first mentioned table) and matching records from the right table (the second mentioned table). If there are no matches in the right table, the values will be null.
+
+**RIGHT JOIN (RIGHT OUTER JOIN):** Similar to the left join, but returns all records in the right table and the matching records in the left table. If there are no matches in the left table, the values will be null.
+
+**FULL JOIN (FULL OUTER JOIN):** A full join returns all records from both tables, with matches where they exist and null values where there are no matches.
+
+SELF JOIN: This type of join is used when you want to combine a table with itself. Aliases are used to distinguish the two instances of the same table.
+
+**CROSS JOIN (CARTESIAN JOIN):** A cross join combines all the rows of a table with all the rows of another table, generating a Cartesian product. It is important to be careful when using cross joins, as they can generate a large number of results.
