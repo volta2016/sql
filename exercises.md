@@ -437,3 +437,190 @@ WHERE condition(s)
 ORDER BY column, … ASC/DESC
 LIMIT num_limit OFFSET num_offset;
 ```
+
+Like the INNER JOIN these three new joins have to specify which column to join the data on.
+When joining table A to table B, a LEFT JOIN simply includes rows from A regardless of whether a matching row is found in B. The RIGHT JOIN is the same, but reversed, keeping rows in B regardless of whether a match is found in A. Finally, a FULL JOIN simply means that rows from both tables are kept, regardless of whether a matching row exists in the other table.
+
+When using any of these new joins, you will likely have to write additional logic to deal with NULLs in the result and constraints (more on this in the next lesson).
+
+Did you know?
+You might see queries with these joins written as LEFT OUTER JOIN, RIGHT OUTER JOIN, or FULL OUTER JOIN, but the OUTER keyword is really kept for SQL-92 compatibility and these queries are simply equivalent to LEFT JOIN, RIGHT JOIN, and FULL JOIN respectively.
+
+Exercise
+
+In this exercise, you are going to be working with a new table which stores fictional data about Employees in the film studio and their assigned office Buildings. Some of the buildings are new, so they don't have any employees in them yet, but we need to find some information about them regardless.
+
+Since our browser SQL database is somewhat limited, only the LEFT JOIN is supported in the exercise below.
+
+Table: Buildings (Read-Only)
+Building_name Capacity
+1e 24
+1w 32
+2e 16
+2w 20
+
+Table: Employees (Read-Only)
+Role Name Building Years_employed
+Engineer Becky A. 1e 4
+Engineer Dan B. 1e 2
+Engineer Sharon F. 1e 6
+Engineer Dan M. 1e 4
+Engineer Malcom S. 1e 1
+Artist Tylar S. 2w 2
+Artist Sherman D. 2w 8
+Artist Jakob J. 2w 6
+Artist Lillia A. 2w 7
+Artist Brandon J. 2w 7
+Manager Scott K. 1e 9
+Manager Shirlee M. 1e 3
+Manager Daria O. 2w 6
+
+1. Find the list of all buildings that have employees
+
+```sql
+SELECT DISTINCT Building FROM employees;
+```
+
+```sql
+SELECT DISTINCT Building_name FROM buildings
+LEFT JOIN employees ON building_name = building
+WHERE ROLE IS NOT NULL;
+```
+
+2 Find the list of all buildings and their capacity
+
+```sql
+SELECT DISTINCT Building_name, capacity FROM buildings
+LEFT JOIN employees ON building_name = building
+```
+
+3. List all buildings and the distinct employee roles in each building (including empty buildings)
+
+```sql
+SELECT DISTINCT Building_name, role FROM buildings
+LEFT JOIN employees ON Building_name = Building
+
+```
+
+In SQL, the DISTINCT clause is used to filter the results of a query so that only unique values in a specific column are displayed. When the DISTINCT keyword is applied to a query, the database engine removes duplicate rows based on the values in the specified column, and only displays one instance of each unique value in that column.
+
+The basic syntax for using DISTINCT in an SQL query is as follows:
+
+sql
+Copy code
+SELECT DISTINCT column FROM table;
+
+## A short note on NULLs
+
+As promised in the last lesson, we are going to quickly talk about NULL values in an SQL database. It's always good to reduce the possibility of NULL values in databases because they require special attention when constructing queries, constraints (certain functions behave differently with null values) and when processing the results.
+
+An alternative to NULL values in your database is to have data-type appropriate default values, like 0 for numerical data, empty strings for text data, etc. But if your database needs to store incomplete data, then NULL values can be appropriate if the default values will skew later analysis (for example, when taking averages of numerical data).
+
+Sometimes, it's also not possible to avoid NULL values, as we saw in the last lesson when outer-joining two tables with asymmetric data. In these cases, you can test a column for NULL values in a WHERE clause by using either the IS NULL or IS NOT NULL constraint.
+
+```SQL
+Select query with constraints on NULL values
+SELECT column, another_column, …
+FROM mytable
+WHERE column IS/IS NOT NULL
+AND/OR another_condition
+AND/OR …;
+```
+
+Exercise
+This exercise will be a sort of review of the last few lessons. We're using the same Employees and Buildings table from the last lesson, but we've hired a few more people, who haven't yet been assigned a building.
+
+Table: Buildings (Read-Only)
+Building_name Capacity
+1e 24
+1w 32
+2e 16
+2w 20
+
+Table: Employees (Read-Only)
+Role Name Building Years_employed
+Engineer Becky A. 1e 4
+Engineer Dan B. 1e 2
+Engineer Sharon F. 1e 6
+Engineer Dan M. 1e 4
+Engineer Malcom S. 1e 1
+Artist Tylar S. 2w 2
+
+1. Find the name and role of all employees who have not been assigned to a building
+
+```sql
+SELECT name, role FROM employees
+WHERE building is NULL
+```
+
+2. Find the names of the buildings that hold no employees
+
+```sql
+SELECT building_name from buildings
+LEFT JOIN employees ON Building_name = building
+WHERE ROLE is NULL
+```
+
+on doing the relation is like where of join
+
+LEFT JOIN, also known as LEFT OUTER JOIN, is a type of join operation in SQL that combines rows from two or more tables based on a specified condition while retaining all the rows from the left table (the first mentioned table) and matching rows from the right table (the second mentioned table). If there are no matches in the right table, null values will be shown in those positions.
+
+The basic syntax of a LEFT JOIN is as follows:
+
+```sql
+Copy code
+SELECT columns
+FROM left_table
+```
+
+LEFT JOIN right_table ON left_table.column = right_table.column;
+Here, "columns" are the columns you want to select in the query, "left_table" is the first table from which you want to select data, "right_table" is the second table, and "column" is the column on which you want to base the join condition.
+
+The result of a LEFT JOIN will include all the rows from the left table and the matching rows from the right table according to the specified join condition. If there are no matches in the right table, those positions will be filled with null values.
+
+For example, suppose you have two tables, "customers" and "orders", and you want to get a list of all customers along with their orders (if they have any):
+
+Table "customers":
+
+diff
+Copy code
+customer_id | name
+
+---
+
+1 | John
+2 | Maria
+3 | Carlos
+Table "orders":
+
+mathematica
+Copy code
+order_id | customer_id | product
+
+---
+
+101 | 1 | Product A
+102 | 2 | Product B
+103 | 1 | Product C
+You can use a LEFT JOIN to get a list of customers along with their orders (if they have any):
+
+```sql
+Copy code
+SELECT customers.name, orders.product
+FROM customers
+LEFT JOIN orders ON customers.customer_id = orders.customer_id;
+```
+
+Result:
+
+mathematica
+Copy code
+name | product
+
+---
+
+John | Product A
+Maria | Product B
+John | Product C
+Carlos | NULL
+In this example, the result includes all rows from the "customers" table and the matching rows from the "orders" table. Since Carlos has no orders, his row displays NULL in the "product" column.

@@ -60,3 +60,20 @@ id INTEGER
 name TEXT
 age INTEGER
 Rows: 4
+
+a database management system is used to interact with a db.
+
+there are several dbms programs and myslq is the most popular among them.
+
+![My Image](./images/dbms.png)
+
+SQL is a language designed to manage and communicate with the information stored in the databases of relational data
+
+"Language for Data Definition (LDD)"
+"Language for Data Manipulation (LMD)"
+"Language for Data Control (LCD)"
+
+A relational database is one where:
+
+All tables have a field that serves as a unique identifier for each record.
+This identifier allows predefined relationships between all tables.
