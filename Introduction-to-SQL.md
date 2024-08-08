@@ -168,7 +168,3 @@ Summary:
 CREATE: Adds new objects to the database.
 DROP: Removes objects from the database.
 ALTER: Changes the structure of existing objects.
-
-```
-
-```
