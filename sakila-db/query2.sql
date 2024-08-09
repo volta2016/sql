@@ -30,3 +30,7 @@ DESCRIBE KOI;
 
 -- Query all data from the KOI table (to see the added column, if needed)
 SELECT * FROM KOI;
+
+DROP TABLE KOI;
+
+SHOW TABLES;
